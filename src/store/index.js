@@ -14,7 +14,7 @@ export default createStore({
       username: '',
       puuid: '',
       region: '',
-      APIkey: 'RGAPI-390ac06a-525d-4fad-a8b3-ecad40e16855',
+      APIkey: '',
     }
   },
   getters: {
