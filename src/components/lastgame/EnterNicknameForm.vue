@@ -1,23 +1,24 @@
 <template>
-  <form @submit.prevent>
-    <div class="form-elements">
-      <div class="form-control">
-        <label for="summonerName">Summoner Name</label>
-        <input type="text" id="summonerName" v-model="summonerName" />
+  <div>
+    <base-dialog :show="!!error" title="An error occured" @close="handleError">
+      <p>{{ error }}</p>
+    </base-dialog>
+    <form @submit.prevent>
+      <div class="form-elements">
+        <div class="form-control">
+          <label for="summonerName">Summoner Name</label>
+          <input type="text" id="summonerName" v-model="summonerName" />
+        </div>
+        <div class="form-control">
+          <label for="region">Region</label>
+          <select id="region" v-model="selectedRegion">
+            <option v-for="reg in regions" :key="reg.key">{{ reg.reg }}</option>
+          </select>
+        </div>
+        <base-big-button @click="submitForm">Search</base-big-button>
       </div>
-
-      <div class="form-control">
-        <label for="region">Region</label>
-        <select id="region" v-model="selectedRegion">
-          <option v-for="reg in regions" :key="reg.key">{{ reg.reg }}</option>
-        </select>
-      </div>
-      <base-big-button v-if="!summonerNameValue" @click="submitForm"
-        >Add</base-big-button
-      >
-      <base-big-button v-else @click="submitForm">Change</base-big-button>
-    </div>
-  </form>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -29,13 +30,17 @@ export default {
       summonerName: 'Rogopop',
       regions: [
         { key: 1, reg: 'EUN1' },
-        { key: 2, reg: 'euw1' },
-        { key: 3, reg: 'na1' },
+        { key: 2, reg: 'EUW1' },
+        { key: 3, reg: 'NA1' },
       ],
       selectedRegion: 'EUN1',
+      error: null,
     };
   },
   methods: {
+    handleError() {
+      this.error = null;
+    },
     ...mapActions({
       saveSummonerName: 'setUsername',
       saveRegion: 'setRegion',
@@ -47,7 +52,7 @@ export default {
       try {
         this.fetchPUUID(this.summonerName);
       } catch (error) {
-        console.log(error);
+        this.error = error.message || 'Couldnt load PUUID';
       }
     },
   },

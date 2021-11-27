@@ -1,17 +1,15 @@
 <template>
   <section>
-    <h3>Select Game</h3>
-    <label for="gameid">Game</label>
+    <h4>Select Game</h4>
     <select id="gameid" v-model="selectedOption">
-      <option v-for="(item, index) in gameIDs" :key="index"
-        >{{ item }}</option
-      >
+      <option v-for="(item, index) in gameIDs" :key="index">{{ item }}</option>
     </select>
   </section>
 </template>
 
 <script>
 export default {
+  emits: ['game-was-changed'],
   data() {
     return {
       selectedOption: '',
@@ -24,8 +22,19 @@ export default {
   },
   watch: {
     selectedOption() {
-      this.$store.dispatch('lastGame/fetchGameData', this.selectedOption);
+      this.$emit('game-was-changed', this.selectedOption)
     },
   },
 };
 </script>
+
+<style scoped>
+h4 {
+  margin: 0 1rem;
+}
+section {
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+}
+</style>

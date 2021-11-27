@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-
 export default {
-    async fetchGameData(context, payload) {
-        const apiKey = context.rootGetters.apikey;
-        const url = `http://localhost:8080/lol/match/v5/matches/${payload}`
+    async fetchOneGameData(context, payload) {
+        const matchEndpoint = process.env.VUE_APP_RIOT_MATCH_DATA_BY_MATCH_ID;
+        const apiKey = process.env.VUE_APP_API_KEY;
+        const url = `http://localhost:8080${matchEndpoint}${payload}`
         const response = await axios.get(url, {
             params: {
                 api_key: apiKey
@@ -17,7 +17,7 @@ export default {
             throw error;
         }
 
-        const teams = {
+        const twoTeams = {
             blueTeam: [],
             redTeam: []
         };
@@ -25,23 +25,24 @@ export default {
         for (const participant of response.data.info.participants) {
 
             if (participant.teamId === 100) {
-                teams.blueTeam.push({
+                twoTeams.blueTeam.push({
                     summonerName: participant.summonerName,
                     championName: participant.championName
                 })
             } else {
-                teams.redTeam.push({
+                twoTeams.redTeam.push({
                     summonerName: participant.summonerName,
                     championName: participant.championName
                 })
             }
         };
-        context.commit('setLastGameData', teams)
+        context.commit('setLastGameData', twoTeams)
     },
     async fetchLastTenGames(context) {
-        const apiKey = context.rootGetters.apikey;
+        const apiKey = process.env.VUE_APP_API_KEY;
+        const matchIdEndpoint = process.env.VUE_APP_RIOT_MATCH_IDS_BY_PUUID;
         const userPUUID = context.rootGetters.puuid;
-        const url = `http://localhost:8080/lol/match/v5/matches/by-puuid/${userPUUID}/ids`
+        const url = `http://localhost:8080${matchIdEndpoint}${userPUUID}/ids`
         const response = await axios.get(url, {
             params: {
                 api_key: apiKey,
@@ -54,12 +55,22 @@ export default {
             const error = new Error("Response returned with the following status: " + response.status);
             throw error;
         }
-
-        console.log("COMMITING LAST TEN GAMES");
-        let lastTenGamesObj = {
-            ...response.data
-        };
-
+        const lastTenGamesObj = response.data;
         context.commit('setLastTenGames', lastTenGamesObj)
+    },
+
+    async saveSummonerCommentToDB(_, payload) {
+        const summoner = payload.summoner;
+        const endpoint = process.env.VUE_APP_FIREBASE_SUMMONERSCOMMENTS_URL;
+        const url = `${endpoint}${summoner}.json`;
+
+        const response = await axios.post(url,
+            payload.formData
+        );
+
+        if (response.statusText !== 'OK') {
+            const error = new Error("Could not save the summoner comment: " + response.status)
+            throw error;
+        }
     }
 };

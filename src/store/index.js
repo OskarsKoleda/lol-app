@@ -14,21 +14,20 @@ export default createStore({
       username: '',
       puuid: '',
       region: '',
-      APIkey: '',
     }
   },
   getters: {
     username(state) {
       return state.username;
     },
-    apikey(state) {
-      return state.APIkey;
-    },
     puuid(state) {
       return state.puuid;
     }
   },
   actions: {
+    reset(context) {
+      context.commit('clearUserData')
+    },
     setUsername(context, payload) {
       context.commit('setUsername', payload);
     },
@@ -36,9 +35,10 @@ export default createStore({
       context.commit('setRegion', payload)
     },
     async fetchPUUID(context, payload) {
-      const apiKey = context.rootGetters.apikey;
       const summonerName = payload;
-      const url = `http://localhost:8080/lol/summoner/v4/summoners/by-name/${summonerName}`
+      const apiKey = process.env.VUE_APP_API_KEY;
+      const summonerPuuidByName = process.env.VUE_APP_RIOT_SUMMONER_DATA_ENDPOINT;
+      const url = `http://localhost:8080${summonerPuuidByName}${summonerName}`
       const response = await axios.get(url, {
         params: {
           api_key: apiKey
@@ -63,6 +63,10 @@ export default createStore({
     },
     setRegion(state, payload) {
       state.region = payload;
+    },
+    clearUserData(state) {
+      state.username = '';
+      state.puuid = '';
     }
   },
 });

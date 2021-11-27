@@ -1,9 +1,6 @@
 <template>
   <div class="main-container">
-    <div v-if="summonerName" class="buttons-container">
-      <base-big-button @click="this.$emit('get-last-game-data')"
-        >Last Game</base-big-button
-      >
+    <div v-if="puuid" class="buttons-container">
       <base-big-button>Save Rates</base-big-button>
       <base-big-button>Clear</base-big-button>
     </div>
@@ -23,11 +20,13 @@ export default {
   components: {
     EnterNicknameForm,
   },
-  emits: ['get-last-game-data'],
   computed: {
     summonerName() {
       return this.$store.getters['username'];
     },
+    puuid() {
+      return this.$store.getters['puuid']
+    }
   },
 };
 </script>

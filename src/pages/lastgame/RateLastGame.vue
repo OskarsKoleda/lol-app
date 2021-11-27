@@ -1,77 +1,84 @@
 <template>
-  <actions-menu @get-last-game-data="loadLastGameData"></actions-menu>
-  <select-game-form v-if="puuid && !tenGamesAreLoading">
-    
-  </select-game-form>
-  <div v-if="teams" class="main-container">
-    <div class="teams-container blue-team">
-      <ul>
-        <base-player-item
-          v-for="player in teams.blueTeam"
-          :key="player.summonerName"
-          :summonerName="player.summonerName"
-          :championName="player.championName"
-          mode="blueTeam"
-        ></base-player-item>
-      </ul>
+  <div>
+    <base-dialog :show="!!error" title="An error occured" @close="handleError">
+      <p>{{ error }}</p>
+    </base-dialog>
+
+    <actions-menu></actions-menu>
+
+    <div v-if="tenGamesAreLoading">
+      <base-spinner></base-spinner>
     </div>
-    <div class="teams-container red-team">
-      <ul>
-        <base-player-item
-          v-for="player in teams.redTeam"
-          :key="player.summonerName"
-          :summonerName="player.summonerName"
-          :championName="player.championName"
-          mode="redTeam"
-        ></base-player-item>
-      </ul>
+    <select-game-form
+      @game-was-changed="loadGameData"
+      v-else-if="gameIdsLength > 0 && !tenGamesAreLoading && !error"
+    ></select-game-form>
+
+    <div v-if="gameDataIsLoading">
+      <base-spinner></base-spinner>
     </div>
+    <teams-section
+      v-else-if="teams && !gameDataIsLoading"
+      :teams="teams"
+    ></teams-section>
   </div>
 </template>
 
 <script>
 import ActionsMenu from '../../components/lastgame/ActionsMenu.vue';
 import SelectGameForm from '../../components/lastgame/SelectGameForm.vue';
+import BothTeams from '../../components/lastgame/BothTeamsLayout.vue';
 export default {
   components: {
     ActionsMenu,
     SelectGameForm,
+    TeamsSection: BothTeams,
   },
   data() {
     return {
+      error: null,
       tenGamesAreLoading: false,
+      gameDataIsLoading: false,
     };
   },
   watch: {
     puuid() {
-      console.log('PUUID CHANGED');
-      this.getLastTenGame();
+      this.getLastTenGames();
     },
   },
   methods: {
-    async loadLastGameData() {
-      try {
-        await this.$store.dispatch('lastGame/fetchLastGameData');
-      } catch (error) {
-        console.log('THERE WAS AN ERROR: ' + error);
-      }
+    handleError() {
+      this.error = null;
     },
-    async getLastTenGame() {
+    async loadGameData(selectedOption) {
+      this.gameDataIsLoading = true;
+      try {
+        await this.$store.dispatch('lastGame/fetchOneGameData', selectedOption);
+      } catch (error) {
+        this.error = error.message || 'Could not retrieve game data';
+      }
+      this.gameDataIsLoading = false;
+    },
+    async getLastTenGames() {
       this.tenGamesAreLoading = true;
       try {
         await this.$store.dispatch('lastGame/fetchLastTenGames');
       } catch (error) {
-        console.log(error);
+        this.error = error.message || 'Something went wrong!';
+        this.$store.dispatch('reset');
       }
       this.tenGamesAreLoading = false;
     },
   },
   computed: {
     teams() {
-      return this.$store.getters['lastGame/getTeams'];
+      return this.$store.getters['lastGame/getOneGameData'];
     },
     puuid() {
       return this.$store.getters['puuid'];
+    },
+    gameIdsLength() {
+      return this.$store.getters['lastGame/getLengthOfGamesList'];
     },
   },
 };
@@ -80,20 +87,5 @@ export default {
 <style scoped>
 .main-container {
   display: flex;
-}
-.teams-container {
-  width: 50%;
-}
-
-.blue-team {
-  background-color: rgb(94, 202, 202);
-}
-
-.red-team {
-  background-color: rgb(202, 77, 102);
-}
-
-ul {
-  padding: 20px 0;
 }
 </style>
