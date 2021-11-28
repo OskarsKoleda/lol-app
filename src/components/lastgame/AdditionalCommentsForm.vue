@@ -17,13 +17,13 @@
       <div class="form-control">
         <div>
           <input type="checkbox" id="leaver" value="leaver" v-model="tags" />
-          <label for="abuser">Leaver</label>
+          <label for="leaver">Leaver</label>
         </div>
       </div>
       <div class="form-control">
         <div>
           <input type="checkbox" id="idiot" value="idiot" v-model="tags" />
-          <label for="abuser">Idiot</label>
+          <label for="idiot">Idiot</label>
         </div>
       </div>
       <div class="form-control commet-text">
@@ -71,6 +71,14 @@ export default {
 .form-control {
   margin: 0.5rem 0;
 }
+
+input[type='checkbox'] {
+  cursor: pointer;
+}
+input[type='checkbox'] + label {
+  cursor: pointer;
+}
+
 input[type='checkbox']:focus {
   outline: #3d008d solid 1px;
 }
@@ -88,13 +96,10 @@ dialog {
   position: fixed;
   top: 20vh;
   left: 10%;
-  /* width: 80%; */
   z-index: 100;
   border-radius: 6px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  /* padding: 0; */
-  /* margin: 0; */
   background-color: rgb(97, 219, 144);
 }
 

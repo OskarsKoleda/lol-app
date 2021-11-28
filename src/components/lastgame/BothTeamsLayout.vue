@@ -9,6 +9,11 @@
               :championName="player.championName"
               mode="blueTeam"
             >
+              <template v-slot:ratings>
+                <add-summoner-rating
+                  :akey="player.summonerName"
+                ></add-summoner-rating>
+              </template>
               <template v-slot:notes>
                 <add-summoner-comments-section
                   :summonerName="player.summonerName"
@@ -27,6 +32,11 @@
               :championName="player.championName"
               mode="redTeam"
             >
+              <template v-slot:ratings>
+                <add-summoner-rating
+                  :akey="player.summonerName"
+                ></add-summoner-rating>
+              </template>
               <template v-slot:notes>
                 <add-summoner-comments-section
                   :summonerName="player.summonerName"
@@ -43,11 +53,16 @@
 
 <script>
 import AddSummonerCommentsSection from './AddSummonerComment.vue';
+import AddSummonerRating from './AddSummonerRating.vue';
 export default {
   components: {
     AddSummonerCommentsSection,
+    AddSummonerRating,
   },
   props: ['teams'],
+  data() {
+    return { val: 'test' };
+  },
 };
 </script>
 

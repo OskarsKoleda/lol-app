@@ -25,6 +25,7 @@ html {
 
 body {
   margin: 0;
+  padding: 0;
   background-color: #e4e9de;
   color: #923e43;
 }

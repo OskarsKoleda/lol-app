@@ -4,7 +4,7 @@
       <h3>{{ summonerName }}</h3>
       <h3>{{ championName }}</h3>
     </header>
-    <main><slot name="marks"></slot></main>
+    <main><slot name="ratings"></slot></main>
     <footer><slot name="notes"></slot></footer>
   </div>
 </template>
@@ -21,9 +21,13 @@ div {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
+  padding: 0 1rem;
   margin: 1rem auto;
   max-width: 40rem;
+}
+
+header {
+  width: 40%;
 }
 
 h3 {

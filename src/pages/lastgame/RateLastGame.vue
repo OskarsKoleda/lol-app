@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <base-dialog :show="!!error" title="An error occured" @close="handleError">
       <p>{{ error }}</p>
     </base-dialog>
@@ -85,7 +85,4 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
-  display: flex;
-}
 </style>
