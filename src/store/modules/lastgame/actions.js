@@ -59,17 +59,17 @@ export default {
         context.commit('setLastTenGames', lastTenGamesObj)
     },
 
-    async saveSummonerCommentToDB(_, payload) {
+    async saveSummonerCommentToDB(context, payload) {
+        const token = context.rootGetters['auth/token'];
         const summoner = payload.summoner;
         const endpoint = process.env.VUE_APP_FIREBASE_SUMMONERSCOMMENTS_URL;
-        const url = `${endpoint}${summoner}.json`;
-
-        const response = await axios.post(url,
-            payload.formData
-        );
-
+        const url = `${endpoint}${summoner}.json?auth=` + token;
+        const response = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(payload.formData)
+        });
         if (response.statusText !== 'OK') {
-            const error = new Error("Could not save the summoner comment: " + response.status)
+            const error = new Error("Could not save summoner comment: " + response.status)
             throw error;
         }
     }

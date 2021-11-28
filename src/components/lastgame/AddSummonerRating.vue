@@ -73,9 +73,6 @@ export default {
       ratings: [],
     };
   },
-  created() {
-    console.log(this.akey);
-  },
   computed: {
     idGod() {
       return 'god' + this.akey;

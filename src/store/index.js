@@ -4,10 +4,12 @@ import {
 } from 'vuex';
 
 import lastGameModule from './modules/lastgame/index.js';
+import authModule from './modules/auth/index.js';
 
 export default createStore({
   modules: {
-    lastGame: lastGameModule
+    lastGame: lastGameModule,
+    auth: authModule
   },
   state() {
     return {

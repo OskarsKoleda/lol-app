@@ -1,10 +1,10 @@
 <template>
-  <div >
+  <div>
     <base-dialog :show="!!error" title="An error occured" @close="handleError">
       <p>{{ error }}</p>
     </base-dialog>
 
-    <actions-menu></actions-menu>
+    <actions-menu v-if="isLoggedIn"></actions-menu>
 
     <div v-if="tenGamesAreLoading">
       <base-spinner></base-spinner>
@@ -71,6 +71,9 @@ export default {
     },
   },
   computed: {
+    isLoggedIn() {
+      return this.$store.getters['auth/isAuthenticated'];
+    },
     teams() {
       return this.$store.getters['lastGame/getOneGameData'];
     },
@@ -84,5 +87,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -35,7 +35,7 @@ export default {
 .main-container {
   display: flex;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 0 5rem 0 5rem;
+  padding: 10px 5rem 1rem 5rem;
 }
 
 .buttons-container {

@@ -100,7 +100,7 @@ dialog {
   border-radius: 6px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  background-color: rgb(97, 219, 144);
+  background-color: rgb(186, 231, 203);
 }
 
 .commet-text {
