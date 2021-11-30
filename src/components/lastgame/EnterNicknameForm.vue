@@ -50,8 +50,9 @@ export default {
       this.saveSummonerName(this.summonerName);
       this.saveRegion(this.selectedRegion);
       try {
-        this.fetchPUUID(this.summonerName);
+        await this.fetchPUUID(this.summonerName);
       } catch (error) {
+        console.log(' ASDSDHKADKJAHDKAjdhs');
         this.error = error.message || 'Couldnt load PUUID';
       }
     },

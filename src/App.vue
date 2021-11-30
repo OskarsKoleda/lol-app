@@ -9,6 +9,21 @@ export default {
   components: {
     TheHeader,
   },
+  created() {
+    this.$store.dispatch('auth/tryLogin');
+  },
+  computed: {
+    didAutoLogout() {
+      return this.$store.getters['auth/didAutoLogout']
+    }
+  },
+  watch: {
+    didAutoLogout(currentValue, oldValue) {
+      if (currentValue && currentValue !== oldValue) {
+        this.$router.replace('auth');
+      }
+    }
+  }
 };
 </script>
 
